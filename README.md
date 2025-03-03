@@ -88,7 +88,23 @@ This collection stores **image compression requests** and tracks their processin
    ```
 4. **[MongoDB](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/): Download and follow the instructions here**
 5. **[Python](https://www.python.org/downloads/): Download python 3.11**
+6. **Create a `credentials.json` with the following details in the root folder**
 
+    ```
+    {
+        "username": "",                            //db username (keep empty if nothing)
+        "password": "",                            //db password (keep empty if nothing)
+        "host": "127.0.0.1",                       //db host ip
+        "database": "SDE1_BACKEND",                //db name
+        "compression_percentage": 50,
+    
+        "host_server": "127.0.0.1",                //server ip
+        "port_server": "80",                       //server port
+        "email": "randomrajesh164@gmail.com",      //email (test email for this project)
+        "email_password": "ynmd wwwh bref ekbf"    //password
+    }
+    ```
+   
 ### **2️⃣ Get it up and running**
 1. **Clone the repository**
 2. **Run the setup.bat file**
