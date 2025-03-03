@@ -1,7 +1,7 @@
 # 📸 Image Processing System (Async Backend)
 
 ## 🚀 Overview
-This project processes images asynchronously from a CSV file, compressing them by **50%**, storing them in a database, and providing **API endpoints** to track their status. A **webhook flow** is implemented to notify through email after all images are processed.
+This project processes images asynchronously from a CSV file, compressing them by **50%**, storing them in a database, and providing **API endpoints** to track their status. A **webhook flow** is implemented to notify through email after all images are processed. [Draw.io](https://drive.google.com/file/d/1-DnBlG7b78wJnopZaW5sMjR8XzL_k7kx/view?usp=sharing)
 
 ## 📑 Features
 ✅ **Upload CSV** with image URLs  
