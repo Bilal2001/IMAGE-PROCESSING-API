@@ -1,0 +1,9 @@
+fastapi
+pandas
+pillow
+uvicorn
+pymongo
+celery
+redis
+requests
+python-multipart
