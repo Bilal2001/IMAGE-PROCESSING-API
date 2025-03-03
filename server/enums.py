@@ -29,15 +29,18 @@ class DataCollection:
     """
         {
             request_id: ...,
+            email: ...,
             product_details: {
                 <prod_name>: {
                     input_urls: ["...", "..."],
                     output_urls: ["...", "..."],
+                    task_ids: ["...", "..."]
                 },
                 ...
             },
             status: any [PENDING, COMPLETED],
-            no_img_compressed: 0
+            no_img_compressed: 0,
+            total_images: x,
         }
     """
     REQ_ID = "request_id"
