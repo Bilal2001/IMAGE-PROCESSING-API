@@ -8,95 +8,10 @@ import io
 from gridfs import GridFS
 from pymongo import MongoClient
 import requests
-# from enums import *
-class LogType:
-    INFO = "info"
-    SUCCESS = "success"
-    ERROR = "error"
+from launch_celery import celery_app
+from .enums import *
+from .manager import log, db_instance, fs, HOST, PORT
 
-class CREDENTIALS_KEYS:
-    DB_UNAME = "username"
-    DB_PASSWORD = "password"
-    HOST = "host"
-    DATABASE = "database"
-
-
-    HOST_SERVER = "host_server"
-    PORT_SERVER = "port_server"
-    COMPRESSION_PERCENTAGE = "compression_percentage"
-
-class DataCollection:
-    """
-        {
-            request_id: ...,
-            product_details: {
-                <prod_name>: {
-                    input_urls: ["...", "..."],
-                    output_urls: ["...", "..."],
-                },
-                ...
-            },
-            status: any [PENDING, COMPLETED],
-            no_img_compressed: 0
-        }
-    """
-    REQ_ID = "request_id"
-    PROD_DETAILS = "product_details"
-    STATUS = "status"
-    INP_URLS = "input_urls"
-    OUT_URLS = "output_urls"
-    IMG_COMPRESSED_COUNT = "no_img_compressed"
-    TOTAL_IMG = "total_images"
-
-    STATUS_COMPLETED = "completed"
-    STATUS_PENDING = "pending"    
-
-
-def log(log_type: LogType, message: str):
-    os.makedirs(os.path.join("content", "logs"), exist_ok=True)
-    current_datetime = datetime.now()
-    message = f"{current_datetime} : {log_type.upper()}: {message}"
-    try:
-        print(message)
-        with open(os.path.join("content", "logs", f"{current_datetime.date().strftime('%Y-%m-%d')}.txt"), "a+") as f:
-            f.write(f"{message}\n")
-            f.close()
-    except:
-        ...
-        
-if not os.path.exists(os.path.join("credentials.json")):
-    log(LogType.ERROR, "No credentials.json")
-    exit(0)
-
-with open(os.path.join("credentials.json"), "r") as file:
-    credentials = json.load(file)
-    file.close() 
-
-QUALITY = credentials[CREDENTIALS_KEYS.COMPRESSION_PERCENTAGE]
-HOST = credentials[CREDENTIALS_KEYS.HOST_SERVER]
-PORT = credentials[CREDENTIALS_KEYS.PORT_SERVER]
-
-url = f"mongodb://{credentials[CREDENTIALS_KEYS.DB_UNAME]}{':' if len(credentials[CREDENTIALS_KEYS.DB_UNAME]) != 0 else ''}{credentials[CREDENTIALS_KEYS.DB_PASSWORD]}{'@' if len(credentials[CREDENTIALS_KEYS.DB_UNAME]) != 0 else ''}{credentials[CREDENTIALS_KEYS.HOST]}:27017/{credentials[CREDENTIALS_KEYS.DATABASE]}"
-
-try:
-    db_instance = MongoClient(url)[credentials[CREDENTIALS_KEYS.DATABASE]]
-    fs = GridFS(db_instance, collection="compressed_images")  # Separate collection for images
-    log(LogType.SUCCESS, "DB Connected")
-except:
-    log(LogType.ERROR, "DB couldn't connect")
-    log(LogType.ERROR, traceback.format_exc(limit=1))
-    exit(0)
-
-
-# Celery Configuration
-celery_app = Celery(
-    "tasks",
-    broker="redis://127.0.0.1:6379/0",  # Still need a broker (Redis or RabbitMQ) [set up redis using wsl or something]
-    backend="mongodb://localhost:27017/celery_db"  # Use MongoDB for task results
-)
-celery_app.conf.task_routes = {
-    "server.celery_worker.compress_image": {"queue": "celery"},
-}
 
 @celery_app.task(name="server.celery_worker.compress_image")
 def compress_image(request_id, product_name, image_url, output_quality):
