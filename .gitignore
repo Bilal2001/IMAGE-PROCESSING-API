@@ -1,5 +1,6 @@
 __pycache__
 venv
-content/logs
+content
 credentials.json
 test.csv
+ztest*
