@@ -7,9 +7,9 @@ from ..functions import log
 from ..celery_worker import compress_image
 
 
-router = APIRouter(prefix='/upload', tags=['upload'])
+router = APIRouter(tags=['upload'])
 
-@router.post("/")
+@router.post("/upload")
 async def upload_document(email: str, file: UploadFile = File(...)):
     """
         Upload csv, endpoint will validate the format and return the req id

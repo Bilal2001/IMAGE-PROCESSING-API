@@ -7,9 +7,9 @@ from ..manager import db_instance, log
 from ..enums import *
 
 
-router = APIRouter(prefix='/status', tags=['status'])
+router = APIRouter(tags=['status'])
 
-@router.get("/")
+@router.get("/status")
 async def check_status(request_id: str):
     """
         Get current status of request id
@@ -21,7 +21,7 @@ async def check_status(request_id: str):
 
     progress = (data[DataCollection.IMG_COMPRESSED_COUNT] / data[DataCollection.TOTAL_IMG]) * 100
 
-    return {"status": status, "progress": progress}
+    return {"status": status, "progress": f"{progress}%"}
 
     #* In case code needed for giving downloadable csv
     # res = []
